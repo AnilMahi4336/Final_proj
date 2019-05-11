@@ -11,7 +11,7 @@ from sklearn.metrics import precision_score, \
     recall_score, confusion_matrix, classification_report, \
     accuracy_score, f1_score
 
-from utils import helpers
+from utils import tool
 
 def prepare_data(dataset_dir):
     train_input=[]
@@ -54,16 +54,16 @@ def filepath_to_name(name):
 def LOG(X, f=None):
     stamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     if not f:
-        print(time_stamp + " " + X)
+        print(stamp + " " + X)
     else:
-        f.write(time_stamp + " " + X)
+        f.write(stamp + " " + X)
 
 
 
 def total_params():
     total= 0
     for var in tf.trainable_variables():
-        shape = variable.get_shape()
+        shape = var.get_shape()
         variable = 1
         for dim in shape:
             variable *= dim.value
@@ -163,3 +163,4 @@ def evaluate_segmentation(pred, label, num_classes, score_averaging="weighted"):
     return global_accuracy, class_accuracies, prec, rec, f1, iou
 
     
+

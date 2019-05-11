@@ -3,7 +3,7 @@ import tensorflow as tf
 import subprocess
 
 sys.path.append("models")
-from models.Model import build_model
+from models.Model import build_network
 
 def download_checkpoints(model_name):
     subprocess.check_output(["python", "utils/get_pretrained_checkpoints.py", "--model=" + model_name])
@@ -21,7 +21,7 @@ def build_model(model_name, net_input, num_classes, crop_width, crop_height, fro
 	init_fn = None
 	
 	if model_name == "Model":
-	    network = build_model(net_input, num_classes)
+	    network,init_fn = build_network(net_input, frontend=frontend, num_classes=num_classes, is_training=is_training)
 	else:
 	    raise ValueError("Error: the model %d is not available. Try checking which models are available using the command python main.py --help")
 

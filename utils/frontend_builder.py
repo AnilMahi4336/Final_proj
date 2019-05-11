@@ -16,4 +16,4 @@ def build_frontend(inputs, frontend, is_training=True, pretrained_dir="models"):
             frontend_scope='resnet_v2_101'
             init_fn = slim.assign_from_checkpoint_fn(model_path=os.path.join(pretrained_dir, 'resnet_v2_101.ckpt'), var_list=slim.get_model_variables('resnet_v2_101'), ignore_missing_vars=True)
 
-     return logits, end_points, frontend_scope, init_fn 
+    return logits, end_points, frontend_scope, init_fn 

@@ -290,7 +290,7 @@ def CFFBlock(F1, F2, num_classes):
     F2_out = tf.nn.relu(F2_out)
 
     return F1_out, F2_out
-def build_model(inputs, num_classes, preset_model='BiSeNet', frontend="ResNet152", weight_decay=1e-5, is_training=True, pretrained_dir="models"):
+def build_network(inputs, num_classes, frontend="ResNet101", weight_decay=1e-5, is_training=True, pretrained_dir="models"):
     
     ### Context path
     logits, end_points, frontend_scope, init_fn  = frontend_builder.build_frontend(inputs, frontend, pretrained_dir=pretrained_dir, is_training=is_training)
@@ -316,8 +316,8 @@ def build_model(inputs, num_classes, preset_model='BiSeNet', frontend="ResNet152
     #net = slim.conv2d(net, 4, [3,3], rate=2, scope=scope+'_dilated_conv2')
     #net = slim.batch_norm(net, is_training=is_training, scope=scope+'_batch_norm2')
     #net = prelu(net, scope=scope+'_prelu2')
-    inputs_4 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*0.25,  tf.shape(inputs)[2]*0.25])   
-    inputs_2 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*0.5,  tf.shape(inputs)[1]*0.5])
+    inputs_4 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*4,  tf.shape(inputs)[2]*4])   
+    inputs_2 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*2,  tf.shape(inputs)[1]*2])
     #with slim.arg_scope(resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
      # logits_32, end_points_32 = resnet_v2.resnet_v2_101(inputs_4, is_training=is_training, scope='resnet_v2_102')
      # logits_16, end_points_16 = resnet_v2.resnet_v2_101(inputs_2, is_training=is_training, scope='resnet_v2_103')
@@ -334,7 +334,7 @@ def build_model(inputs, num_classes, preset_model='BiSeNet', frontend="ResNet152
     spatial_net_1 = ConvBlock(spatial_net_1, n_filters=128, kernel_size=[3, 3], strides=2)
     spatial_net_1 = ConvBlock(spatial_net_1, n_filters=256, kernel_size=[3, 3], strides=2)
     spatial_net_1 = initial_block(spatial_net_1, scope='initial_block_1')
-    spatial_net_2= ConvBlock(inputs, n_filters=64, kernel_size=[3, 3], strides=2)
+    spatial_net_2= ConvBlock(inputs_4, n_filters=64, kernel_size=[3, 3], strides=2)
     spatial_net_2 = ConvBlock(spatial_net_2, n_filters=128, kernel_size=[3, 3], strides=2)
     spatial_net_2= ConvBlock(spatial_net_2, n_filters=256, kernel_size=[3, 3], strides=2)
     spatial_net_2 = initial_block(spatial_net_2, scope='initial_block_2')
@@ -377,4 +377,5 @@ def build_model(inputs, num_classes, preset_model='BiSeNet', frontend="ResNet152
     net = slim.conv2d(net, num_classes, [1, 1], activation_fn=None, scope='logits')
 
     return net, init_fn
+
 
