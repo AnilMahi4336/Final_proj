@@ -306,7 +306,7 @@ def build_network(inputs, num_classes, frontend="ResNet101", weight_decay=1e-5, 
     #net=end_points['pool2']
     #net = global_avg(net)
     #j = tf.concat([spatial_net ,net], axis=-1)
-    #net_4 = ARM(end_points['pool4'], n_filters=512)
+    net_4 = ARM(end_points['pool4'], n_filters=512)
     #net = conv_transpose_block(inputs, 512)
     #net = initial_block(inputs, scope='initial_block_1')
     
@@ -316,8 +316,8 @@ def build_network(inputs, num_classes, frontend="ResNet101", weight_decay=1e-5, 
     #net = slim.conv2d(net, 4, [3,3], rate=2, scope=scope+'_dilated_conv2')
     #net = slim.batch_norm(net, is_training=is_training, scope=scope+'_batch_norm2')
     #net = prelu(net, scope=scope+'_prelu2')
-    inputs_4 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*4,  tf.shape(inputs)[2]*4])   
-    inputs_2 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*2,  tf.shape(inputs)[1]*2])
+    #inputs_4 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*4,  tf.shape(inputs)[2]*4])   
+    #inputs_2 = tf.image.resize_bilinear(inputs, size=[tf.shape(inputs)[1]*2,  tf.shape(inputs)[1]*2])
     #with slim.arg_scope(resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
      # logits_32, end_points_32 = resnet_v2.resnet_v2_101(inputs_4, is_training=is_training, scope='resnet_v2_102')
      # logits_16, end_points_16 = resnet_v2.resnet_v2_101(inputs_2, is_training=is_training, scope='resnet_v2_103')
@@ -330,32 +330,32 @@ def build_network(inputs, num_classes, frontend="ResNet101", weight_decay=1e-5, 
     #block_16 = PyramidPoolingModule(end_points_16['pool3'], feature_map_shape=feature_map_shape, pooling_type=pooling_type)
     #out_16, block_16_1 = CFFBlock(block_32, end_points_16['pool3'],32)
     #out_8, block_8 = CFFBlock(block_16, end_points_8['pool3'],32) 
-    spatial_net_1 = ConvBlock(inputs_2, n_filters=64, kernel_size=[3, 3], strides=2)
-    spatial_net_1 = ConvBlock(spatial_net_1, n_filters=128, kernel_size=[3, 3], strides=2)
-    spatial_net_1 = ConvBlock(spatial_net_1, n_filters=256, kernel_size=[3, 3], strides=2)
-    spatial_net_1 = initial_block(spatial_net_1, scope='initial_block_1')
-    spatial_net_2= ConvBlock(inputs_4, n_filters=64, kernel_size=[3, 3], strides=2)
-    spatial_net_2 = ConvBlock(spatial_net_2, n_filters=128, kernel_size=[3, 3], strides=2)
-    spatial_net_2= ConvBlock(spatial_net_2, n_filters=256, kernel_size=[3, 3], strides=2)
-    spatial_net_2 = initial_block(spatial_net_2, scope='initial_block_2')
+    #spatial_net_1 = ConvBlock(inputs_2, n_filters=64, kernel_size=[3, 3], strides=2)
+    #spatial_net_1 = ConvBlock(spatial_net_1, n_filters=128, kernel_size=[3, 3], strides=2)
+    #spatial_net_1 = ConvBlock(spatial_net_1, n_filters=256, kernel_size=[3, 3], strides=2)
+    #spatial_net_1 = initial_block(spatial_net_1, scope='initial_block_1')
+    #spatial_net_2= ConvBlock(inputs_4, n_filters=64, kernel_size=[3, 3], strides=2)
+    #spatial_net_2 = ConvBlock(spatial_net_2, n_filters=128, kernel_size=[3, 3], strides=2)
+    #spatial_net_2= ConvBlock(spatial_net_2, n_filters=256, kernel_size=[3, 3], strides=2)
+    #spatial_net_2 = initial_block(spatial_net_2, scope='initial_block_2')
     #spatial_net_2 = initial_block(spatial_net_2, scope='initial_block_3')
     
-    net = slim.conv2d(spatial_net_2, output_depth, [1,1], scope=scope+'_conv3')
-    net = slim.batch_norm(net, is_training=is_training, scope=scope+'_batch_norm3')
-    net = prelu(net, scope=scope+'_prelu3')
+    #net = slim.conv2d(spatial_net_2, output_depth, [1,1], scope=scope+'_conv3')
+    #net = slim.batch_norm(net, is_training=is_training, scope=scope+'_batch_norm3')
+    #net = prelu(net, scope=scope+'_prelu3')
 
-    net = spatial_dropout(net, p=0.01, seed=0, scope=scope+'_spatial_dropout')
+    #net = spatial_dropout(net, p=0.01, seed=0, scope=scope+'_spatial_dropout')
     #net = prelu(net, scope=scope+'_prelu4')
     
     #net = global_avg(net)        
     #net = tf.add(spatial_net_2, net, name=scope+'_add_dilated')
-    spatial_net_2 = prelu(net, scope=scope+'_last_prelu')
-    spatial_net_2 = global_avg(spatial_net_2)       
+    #spatial_net_2 = prelu(net, scope=scope+'_last_prelu')
+    #spatial_net_2 = global_avg(spatial_net_2)       
     #net = global_avg(net)
     #net = bottleneck(net, output_depth=128, filter_size=3, dilated=True, dilation_rate=2, scope='bottleneck'+str(i)+'_2')
     #net = bottleneck(net, output_depth=128, filter_size=5, asymmetric=True, scope='bottleneck'+str(i)+'_3')
     #k=ENet(inputs,num_classes,batch_size=1,num_initial_blocks=1,stage_two_repeat=2,skip_connections=True,reuse=None,is_training=True,scope='ENet')
-    net= tf.concat([spatial_net,spatial_net_1,spatial_net_2],axis=-1)
+    #net= tf.concat([spatial_net,spatial_net_1,spatial_net_2],axis=-1)
       
     net_5 = ARM(end_points['pool5'], n_filters=2048)
 
@@ -363,12 +363,12 @@ def build_network(inputs, num_classes, frontend="ResNet101", weight_decay=1e-5, 
     net_5_scaled = tf.multiply(global_channels, net_5)
 
     ### Combining the paths
-    #net_4 = UP(net_4, scale=2)
+    net_4 = UP(net_4, scale=2)
     net_5_scaled = UP(net_5_scaled, scale=4)
     #net_5_scaled=global_avg(net_5_scaled)
-    #context_net = tf.concat([net_4, net_5_scaled], axis=-1)
+    context_net = tf.concat([net_4, net_5_scaled], axis=-1)
     
-    net = FFM(input_1=net, input_2=net_5_scaled, n_filters=num_classes)
+    net = FFM(input_1=spatial_net, input_2=context_neet, n_filters=num_classes)
 
 
     ### Final upscaling and finish

@@ -47,8 +47,8 @@ def load_image(path):
 
 def filepath_to_name(name):
     file = os.path.basename(name)
-    file = os.path.splitext(file_name)[0]
-    return file_name
+    file = os.path.splitext(file)[0]
+    return file
 
 
 def LOG(X, f=None):
